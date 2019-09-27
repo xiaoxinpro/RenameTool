@@ -139,7 +139,10 @@
             // 
             // comboFileFilter
             // 
+            this.comboFileFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboFileFilter.FormattingEnabled = true;
+            this.comboFileFilter.Items.AddRange(new object[] {
+            "全部"});
             this.comboFileFilter.Location = new System.Drawing.Point(112, 6);
             this.comboFileFilter.Name = "comboFileFilter";
             this.comboFileFilter.Size = new System.Drawing.Size(64, 20);
