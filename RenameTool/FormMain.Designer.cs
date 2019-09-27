@@ -238,6 +238,7 @@
             this.btnAddFile.TabIndex = 5;
             this.btnAddFile.Text = "导入";
             this.btnAddFile.UseVisualStyleBackColor = true;
+            this.btnAddFile.Click += new System.EventHandler(this.btnAddFile_Click);
             // 
             // radioNumberPrefix
             // 
