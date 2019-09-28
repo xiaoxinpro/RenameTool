@@ -13,7 +13,10 @@ namespace RenameTool
     public class FilePathSet
     {
         #region 私有字段
-        Dictionary<string, HashSet<string>> dicExtPath;
+        /// <summary>
+        /// 基础数据结构dict(扩展名,dict(原文件名,新文件名))
+        /// </summary>
+        Dictionary<string, Dictionary<string, string>> dicExtPath;
         #endregion
 
         #region 属性
@@ -23,7 +26,7 @@ namespace RenameTool
         #region 构造函数
         public FilePathSet()
         {
-            dicExtPath = new Dictionary<string, HashSet<string>>();
+            dicExtPath = new Dictionary<string, Dictionary<string, string>>();
         }
         #endregion
 
@@ -36,7 +39,11 @@ namespace RenameTool
         {
             foreach (string strPath in strPaths)
             {
-                getSetPath(getPathExt(strPath)).Add(strPath);
+                Dictionary<string, string> dictPath = getSetPath(getPathExt(strPath));
+                if (!dictPath.TryGetValue(strPath, out string value))
+                {
+                    dictPath.Add(strPath, "");
+                }
             }
         }
 
@@ -49,10 +56,10 @@ namespace RenameTool
             foreach (string strPath in strPaths)
             {
                 string strExt = getPathExt(strPath);
-                if (dicExtPath.TryGetValue(strExt, out HashSet<string> value))
+                if (dicExtPath.TryGetValue(strExt, out Dictionary<string, string> dictPath))
                 {
-                    value.Remove(strPath);
-                    if (value.Count == 0)
+                    dictPath.Remove(strPath);
+                    if (dictPath.Count == 0)
                     {
                         dicExtPath.Remove(strExt);
                     }
@@ -89,9 +96,9 @@ namespace RenameTool
             List<string> listExt = new List<string>();
             foreach (string strExt in dicExtPath.Keys.ToArray())
             {
-                if (dicExtPath.TryGetValue(strExt, out HashSet<string> value))
+                if (dicExtPath.TryGetValue(strExt, out Dictionary<string, string> dictPath))
                 {
-                    if (value.Count > 0)
+                    if (dictPath.Count > 0)
                     {
                         listExt.Add(strExt);
                     }
@@ -109,13 +116,13 @@ namespace RenameTool
         /// </summary>
         /// <param name="strExt"></param>
         /// <returns>路径数组</returns>
-        public string[] GetPath(string strExt)
+        public string[] GetPath(string strExt, bool isOldPath = true)
         {
-            if (dicExtPath.TryGetValue(strExt, out HashSet<string> value))
+            if (dicExtPath.TryGetValue(strExt, out Dictionary<string, string> dictPath))
             {
-                if (value.Count > 0)
+                if (dictPath.Count > 0)
                 {
-                    return value.ToArray<string>();
+                    return isOldPath ? dictPath.Keys.ToArray() : dictPath.Values.ToArray();
                 }
                 else
                 {
@@ -133,14 +140,14 @@ namespace RenameTool
         /// 获取全部文件路径
         /// </summary>
         /// <returns>路径数组</returns>
-        public string[] GetPath()
+        public string[] GetPath(bool isOldPath = true)
         {
             List<string> listPath = new List<string>();
-            foreach (KeyValuePair<string,HashSet<string>> item in dicExtPath)
+            foreach (KeyValuePair<string,Dictionary<string, string>> item in dicExtPath)
             {
                 if (item.Value.Count > 0)
                 {
-                    listPath.AddRange(item.Value.ToArray());
+                    listPath.AddRange(isOldPath ? item.Value.Keys.ToArray() : item.Value.Values.ToArray());
                 }
             }
             return listPath.ToArray();
@@ -162,13 +169,13 @@ namespace RenameTool
         /// <returns></returns>
         public int CountPath(string strExt)
         {
-            if (dicExtPath.TryGetValue(strExt.ToLower().Trim(), out HashSet<string> value))
+            if (dicExtPath.TryGetValue(strExt.ToLower().Trim(), out Dictionary<string, string> dictPath))
             {
-                if (value.Count == 0)
+                if (dictPath.Count == 0)
                 {
                     RemoveExt(strExt);
                 }
-                return value.Count;
+                return dictPath.Count;
             }
             return 0;
         }
@@ -194,15 +201,15 @@ namespace RenameTool
         /// </summary>
         /// <param name="strExt">扩展名</param>
         /// <returns></returns>
-        private HashSet<string> getSetPath(string strExt)
+        private Dictionary<string, string> getSetPath(string strExt)
         {
-            if (dicExtPath.TryGetValue(strExt, out HashSet<string> value))
+            if (dicExtPath.TryGetValue(strExt, out Dictionary<string, string> dictPath))
             {
-                return value;
+                return dictPath;
             }
             else
             {
-                dicExtPath.Add(strExt, new HashSet<string>());
+                dicExtPath.Add(strExt, new Dictionary<string, string>());
                 return getSetPath(strExt);
             }
         }
