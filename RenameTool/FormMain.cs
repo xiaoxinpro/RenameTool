@@ -14,7 +14,7 @@ namespace RenameTool
     public partial class FormMain : Form
     {
         #region 私有字段
-        private FilePathSet oldFilePathSet = new FilePathSet();
+        private FilePathSet objFilePathSet = new FilePathSet();
         private FilePathSet newFilePathSet = new FilePathSet();
         #endregion
 
@@ -98,8 +98,8 @@ namespace RenameTool
         /// <param name="strPath">路径或路径数组</param>
         private void AddFilePath(params string[] strPath)
         {
-            oldFilePathSet.Add(strPath);
-            InitComboFileFilter(comboFileFilter, oldFilePathSet);
+            objFilePathSet.Add(strPath);
+            InitComboFileFilter(comboFileFilter, objFilePathSet);
             AutoResizeColumnWidth(listViewFile);
         }
 
@@ -108,21 +108,23 @@ namespace RenameTool
         /// </summary>
         /// <param name="listView">文件列表控件</param>
         /// <param name="arrPath">路径或路径数组</param>
-        private void UpdataListViewFile(ListView listView, params string[] arrPath)
+        private void UpdataListViewFile(ListView listView, Dictionary<string, string> dictPath)
         {
             listView.Items.Clear();
             listView.BeginUpdate();
-            foreach (string item in arrPath)
+            foreach (KeyValuePair<string,string> item in dictPath)
             {
-                string fileName = Path.GetFileNameWithoutExtension(item);
-                string fileExt = Path.GetExtension(item);
+                string fileName = Path.GetFileNameWithoutExtension(item.Key);
+                string fileExt = Path.GetExtension(item.Key);
+                string newFileName = Path.GetFileNameWithoutExtension(item.Value);
+                string newFileExt = Path.GetExtension(item.Value);
                 ListViewItem listViewItem = new ListViewItem();
                 listViewItem.Text = "准备";
                 listViewItem.SubItems.Add(fileName);
-                listViewItem.SubItems.Add("");
+                listViewItem.SubItems.Add(newFileName);
                 listViewItem.SubItems.Add(fileExt);
-                listViewItem.SubItems.Add(fileExt);
-                listViewItem.SubItems.Add(item);
+                listViewItem.SubItems.Add(newFileExt);
+                listViewItem.SubItems.Add(item.Key);
                 listView.Items.Add(listViewItem);
             }
             listView.EndUpdate();
@@ -217,15 +219,15 @@ namespace RenameTool
         {
             if (comboFileFilter.SelectedIndex == 0)
             {
-                oldFilePathSet.Clear();
+                objFilePathSet.Clear();
                 newFilePathSet.Clear();
-                InitComboFileFilter(comboFileFilter, oldFilePathSet);
+                InitComboFileFilter(comboFileFilter, objFilePathSet);
             }
             else
             {
-                oldFilePathSet.RemoveExt(comboFileFilter.SelectedItem.ToString());
+                objFilePathSet.RemoveExt(comboFileFilter.SelectedItem.ToString());
                 newFilePathSet.RemoveExt(comboFileFilter.SelectedItem.ToString());
-                InitComboFileFilter(comboFileFilter, oldFilePathSet);
+                InitComboFileFilter(comboFileFilter, objFilePathSet);
             }
         }
 
@@ -327,18 +329,18 @@ namespace RenameTool
         /// <param name="e"></param>
         private void comboFileFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string[] arrPath;
+            Dictionary<string, string> dictPath;
             ComboBox comboBox = (ComboBox)sender;
             ListView listView = listViewFile;
             if (comboBox.SelectedIndex == 0)
             {
-                arrPath = oldFilePathSet.GetPath();
+                dictPath = objFilePathSet.GetDictPath();
             }
             else
             {
-                arrPath = oldFilePathSet.GetPath(comboBox.SelectedItem.ToString());
+                dictPath = objFilePathSet.GetDictPath(comboBox.SelectedItem.ToString());
             }
-            UpdataListViewFile(listView, arrPath);
+            UpdataListViewFile(listView, dictPath);
         }
 
 

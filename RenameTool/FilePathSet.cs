@@ -48,6 +48,24 @@ namespace RenameTool
         }
 
         /// <summary>
+        /// 编辑新文件名
+        /// </summary>
+        /// <param name="oldFilePath">旧文件路径</param>
+        /// <param name="newFilePath">新文件路径</param>
+        public void Edit(string oldFilePath, string newFilePath)
+        {
+            if (dicExtPath.TryGetValue(getPathExt(oldFilePath), out Dictionary<string, string> dictPath))
+            {
+                if (!dictPath.TryGetValue(oldFilePath, out string value))
+                {
+                    Add(oldFilePath);
+                }
+                dictPath[oldFilePath] = newFilePath.Trim();
+            }
+            
+        }
+
+        /// <summary>
         /// 删除指定文件路径
         /// </summary>
         /// <param name="strPaths">文件完整路径</param>
@@ -151,6 +169,48 @@ namespace RenameTool
                 }
             }
             return listPath.ToArray();
+        }
+
+        /// <summary>
+        /// 获取全部集合文件路径
+        /// </summary>
+        /// <returns>返回dict(旧文件路径,新文件路径)</returns>
+        public Dictionary<string, string> GetDictPath()
+        {
+            Dictionary<string, string> dictPath = new Dictionary<string, string>();
+            foreach (KeyValuePair<string, Dictionary<string, string>> item in dicExtPath)
+            {
+                if (item.Value.Count > 0)
+                {
+                    dictPath = dictPath.Concat(item.Value).ToDictionary(k => k.Key, v => v.Value);
+                }
+            }
+            return dictPath;
+        }
+
+        /// <summary>
+        /// 获取指定扩展名集合文件路径
+        /// </summary>
+        /// <param name="strExt">扩展名</param>
+        /// <returns>返回dict(旧文件路径,新文件路径)</returns>
+        public Dictionary<string, string> GetDictPath(string strExt)
+        {
+            if (dicExtPath.TryGetValue(strExt, out Dictionary<string, string> dictPath))
+            {
+                if (dictPath.Count > 0)
+                {
+                    return new Dictionary<string, string>(dictPath);
+                }
+                else
+                {
+                    dicExtPath.Remove(strExt);
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
         }
 
         /// <summary>
