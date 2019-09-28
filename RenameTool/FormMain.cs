@@ -113,6 +113,7 @@ namespace RenameTool
                 listView.Items.Add(listViewItem);
             }
             listView.EndUpdate();
+            InitComboFileFilter(comboFileFilter, listView);
             AutoResizeColumnWidth(listView);
         }
 
@@ -179,6 +180,11 @@ namespace RenameTool
         #endregion
 
         #region 列表窗体相关控件
+        /// <summary>
+        /// 导入文件按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnAddFile_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -188,6 +194,97 @@ namespace RenameTool
             if (ofd.ShowDialog() == DialogResult.OK) 
             {
                 AddListViewFile(listViewFile, ofd.FileNames);
+            }
+        }
+
+        /// <summary>
+        /// 将元素拖拽到列表上
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void listViewFile_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.All;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        /// <summary>
+        /// 拖拽完成时发生
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void listViewFile_DragDrop(object sender, DragEventArgs e)
+        {
+            ListView listView = (ListView)sender;
+            string[] arrPath = (string[])e.Data.GetData(DataFormats.FileDrop, true);
+            bool isSubPath = chkSubPath.Checked;
+            bool isHidden = chkHidden.Checked;
+            Task.Run(() =>
+            {
+                List<string> listPath = new List<string>();
+                foreach (string strPath in arrPath)
+                {
+                    if (File.Exists(strPath))
+                    {
+                        listPath.Add(strPath);
+                    }
+                    else if (Directory.Exists(strPath))
+                    {
+                        GetDirectoryAllFileToList(strPath, listPath, isSubPath, false, isHidden);
+                    }
+                }
+                this.Invoke(new Action(() =>
+                {
+                    AddListViewFile(listView, listPath.ToArray());
+                }));
+            });
+        }
+
+        /// <summary>
+        /// 获取文件夹内全部文件到List中
+        /// </summary>
+        /// <param name="strPath">文件夹路径</param>
+        /// <param name="listPath">返回的List对象</param>
+        /// <param name="isSubPath">是否包含子目录</param>
+        /// <param name="isReadOnly">是否包含只读文件</param>
+        /// <param name="isHidden">是否包含隐藏文件</param>
+        private void GetDirectoryAllFileToList(string strPath, List<string> listPath, bool isSubPath = true, bool isReadOnly = false, bool isHidden = false)
+        {
+            if (Directory.Exists(strPath))
+            {
+                string[] arrPath = Directory.GetFiles(strPath);
+                foreach (string item in arrPath)
+                {
+                    FileInfo fi = new FileInfo(item);
+                    if (!isReadOnly && (fi.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                    {
+                        continue;
+                    }
+                    if (!isHidden && (fi.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden)
+                    {
+                        continue;
+                    }
+                    listPath.Add(item);
+                }
+                if (isSubPath)
+                {
+                    arrPath = Directory.GetFiles(strPath);
+                    foreach (string item in arrPath)
+                    {
+                        DirectoryInfo di = new DirectoryInfo(item);
+                        if (!isHidden && (di.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
+                        {
+                            continue;
+                        }
+                        GetDirectoryAllFileToList(item, listPath, isSubPath, isReadOnly, isHidden);
+                    }
+                }
             }
         }
 
