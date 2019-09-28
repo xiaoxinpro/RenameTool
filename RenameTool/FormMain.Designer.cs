@@ -67,7 +67,7 @@
             this.label8 = new System.Windows.Forms.Label();
             this.chkHidden = new System.Windows.Forms.CheckBox();
             this.chkSubPath = new System.Windows.Forms.CheckBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnClearFile = new System.Windows.Forms.Button();
             this.btnAddFile = new System.Windows.Forms.Button();
             this.progressRename = new System.Windows.Forms.ProgressBar();
             this.btnStartRun = new System.Windows.Forms.Button();
@@ -110,7 +110,7 @@
             // 
             this.splitContainerMain.Panel2.Controls.Add(this.chkHidden);
             this.splitContainerMain.Panel2.Controls.Add(this.chkSubPath);
-            this.splitContainerMain.Panel2.Controls.Add(this.button1);
+            this.splitContainerMain.Panel2.Controls.Add(this.btnClearFile);
             this.splitContainerMain.Panel2.Controls.Add(this.btnAddFile);
             this.splitContainerMain.Panel2.Controls.Add(this.progressRename);
             this.splitContainerMain.Panel2.Controls.Add(this.btnStartRun);
@@ -631,14 +631,15 @@
             this.chkSubPath.Text = "包含子目录";
             this.chkSubPath.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // btnClearFile
             // 
-            this.button1.Location = new System.Drawing.Point(3, 4);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(52, 23);
-            this.button1.TabIndex = 100;
-            this.button1.Text = "清空";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnClearFile.Location = new System.Drawing.Point(3, 4);
+            this.btnClearFile.Name = "btnClearFile";
+            this.btnClearFile.Size = new System.Drawing.Size(52, 23);
+            this.btnClearFile.TabIndex = 100;
+            this.btnClearFile.Text = "清空";
+            this.btnClearFile.UseVisualStyleBackColor = true;
+            this.btnClearFile.Click += new System.EventHandler(this.btnClearFile_Click);
             // 
             // btnAddFile
             // 
@@ -787,7 +788,7 @@
         private System.Windows.Forms.ListView listViewFile;
         private System.Windows.Forms.CheckBox chkHidden;
         private System.Windows.Forms.CheckBox chkSubPath;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnClearFile;
     }
 }
 

@@ -209,6 +209,27 @@ namespace RenameTool
         }
 
         /// <summary>
+        /// 清空按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnClearFile_Click(object sender, EventArgs e)
+        {
+            if (comboFileFilter.SelectedIndex == 0)
+            {
+                oldFilePathSet.Clear();
+                newFilePathSet.Clear();
+                InitComboFileFilter(comboFileFilter, oldFilePathSet);
+            }
+            else
+            {
+                oldFilePathSet.RemoveExt(comboFileFilter.SelectedItem.ToString());
+                newFilePathSet.RemoveExt(comboFileFilter.SelectedItem.ToString());
+                InitComboFileFilter(comboFileFilter, oldFilePathSet);
+            }
+        }
+
+        /// <summary>
         /// 将元素拖拽到列表上
         /// </summary>
         /// <param name="sender"></param>
@@ -285,11 +306,11 @@ namespace RenameTool
                 }
                 if (isSubPath)
                 {
-                    arrPath = Directory.GetFiles(strPath);
+                    arrPath = Directory.GetDirectories(strPath);
                     foreach (string item in arrPath)
                     {
                         DirectoryInfo di = new DirectoryInfo(item);
-                        if (!isHidden && (di.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
+                        if (!isHidden && (di.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden)
                         {
                             continue;
                         }
@@ -320,7 +341,8 @@ namespace RenameTool
             UpdataListViewFile(listView, arrPath);
         }
 
-        #endregion
 
+
+        #endregion
     }
 }
