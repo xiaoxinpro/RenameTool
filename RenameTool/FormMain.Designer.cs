@@ -65,15 +65,15 @@
             this.radioTextPrefix = new System.Windows.Forms.RadioButton();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
+            this.chkHidden = new System.Windows.Forms.CheckBox();
+            this.chkSubPath = new System.Windows.Forms.CheckBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.btnAddFile = new System.Windows.Forms.Button();
             this.progressRename = new System.Windows.Forms.ProgressBar();
             this.btnStartRun = new System.Windows.Forms.Button();
             this.comboFileFilter = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.listViewFile = new System.Windows.Forms.ListView();
-            this.button1 = new System.Windows.Forms.Button();
-            this.chkSubPath = new System.Windows.Forms.CheckBox();
-            this.chkHidden = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
             this.splitContainerMain.Panel2.SuspendLayout();
@@ -609,6 +609,37 @@
             this.label8.TabIndex = 1;
             this.label8.Text = "规则连接符：";
             // 
+            // chkHidden
+            // 
+            this.chkHidden.AutoSize = true;
+            this.chkHidden.Location = new System.Drawing.Point(151, 37);
+            this.chkHidden.Name = "chkHidden";
+            this.chkHidden.Size = new System.Drawing.Size(72, 16);
+            this.chkHidden.TabIndex = 102;
+            this.chkHidden.Text = "包含隐藏";
+            this.chkHidden.UseVisualStyleBackColor = true;
+            // 
+            // chkSubPath
+            // 
+            this.chkSubPath.AutoSize = true;
+            this.chkSubPath.Checked = true;
+            this.chkSubPath.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkSubPath.Location = new System.Drawing.Point(61, 37);
+            this.chkSubPath.Name = "chkSubPath";
+            this.chkSubPath.Size = new System.Drawing.Size(84, 16);
+            this.chkSubPath.TabIndex = 101;
+            this.chkSubPath.Text = "包含子目录";
+            this.chkSubPath.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(3, 4);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(52, 23);
+            this.button1.TabIndex = 100;
+            this.button1.Text = "清空";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
             // btnAddFile
             // 
             this.btnAddFile.Location = new System.Drawing.Point(3, 33);
@@ -650,6 +681,7 @@
             this.comboFileFilter.Name = "comboFileFilter";
             this.comboFileFilter.Size = new System.Drawing.Size(112, 20);
             this.comboFileFilter.TabIndex = 2;
+            this.comboFileFilter.SelectedIndexChanged += new System.EventHandler(this.comboFileFilter_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -674,37 +706,6 @@
             this.listViewFile.UseCompatibleStateImageBehavior = false;
             this.listViewFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewFile_DragDrop);
             this.listViewFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewFile_DragEnter);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(3, 4);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(52, 23);
-            this.button1.TabIndex = 100;
-            this.button1.Text = "清空";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // chkSubPath
-            // 
-            this.chkSubPath.AutoSize = true;
-            this.chkSubPath.Checked = true;
-            this.chkSubPath.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkSubPath.Location = new System.Drawing.Point(61, 37);
-            this.chkSubPath.Name = "chkSubPath";
-            this.chkSubPath.Size = new System.Drawing.Size(84, 16);
-            this.chkSubPath.TabIndex = 101;
-            this.chkSubPath.Text = "包含子目录";
-            this.chkSubPath.UseVisualStyleBackColor = true;
-            // 
-            // chkHidden
-            // 
-            this.chkHidden.AutoSize = true;
-            this.chkHidden.Location = new System.Drawing.Point(151, 37);
-            this.chkHidden.Name = "chkHidden";
-            this.chkHidden.Size = new System.Drawing.Size(72, 16);
-            this.chkHidden.TabIndex = 102;
-            this.chkHidden.Text = "包含隐藏";
-            this.chkHidden.UseVisualStyleBackColor = true;
             // 
             // FormMain
             // 

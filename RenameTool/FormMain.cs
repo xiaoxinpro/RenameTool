@@ -13,6 +13,11 @@ namespace RenameTool
 {
     public partial class FormMain : Form
     {
+        #region 私有字段
+        private FilePathSet oldFilePathSet = new FilePathSet();
+        private FilePathSet newFilePathSet = new FilePathSet();
+        #endregion
+
         #region 初始化相关
         /// <summary>
         /// 窗体构造函数
@@ -68,16 +73,15 @@ namespace RenameTool
         /// </summary>
         /// <param name="comboBox">下拉框控件</param>
         /// <param name="listView">文件列表控件</param>
-        private void InitComboFileFilter(ComboBox comboBox, ListView listView = null)
+        private void InitComboFileFilter(ComboBox comboBox, FilePathSet filePathSet = null)
         {
             comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBox.Items.Clear();
             comboBox.Items.Add("全部");
-            if (listView != null)
+            if (filePathSet != null && filePathSet.CountExt() > 0)
             {
-                foreach (ListViewItem item in listView.Items)
+                foreach (string strExt in filePathSet.GetExtension())
                 {
-                    string strExt = item.SubItems[3].Text.Trim().ToLower();
                     if (comboBox.Items.IndexOf(strExt) < 0)
                     {
                         comboBox.Items.Add(strExt);
@@ -88,33 +92,40 @@ namespace RenameTool
         }
 
         /// <summary>
-        /// 添加文件列表
+        /// 添加文件路径
         /// </summary>
         /// <param name="listView">文件列表控件</param>
         /// <param name="strPath">路径或路径数组</param>
-        private void AddListViewFile(ListView listView, params string[] strPath)
+        private void AddFilePath(params string[] strPath)
         {
+            oldFilePathSet.Add(strPath);
+            InitComboFileFilter(comboFileFilter, oldFilePathSet);
+            AutoResizeColumnWidth(listViewFile);
+        }
+
+        /// <summary>
+        /// 更新文件列表
+        /// </summary>
+        /// <param name="listView">文件列表控件</param>
+        /// <param name="arrPath">路径或路径数组</param>
+        private void UpdataListViewFile(ListView listView, params string[] arrPath)
+        {
+            listView.Items.Clear();
             listView.BeginUpdate();
-            foreach (string item in strPath)
+            foreach (string item in arrPath)
             {
-                if (IndexOfSubitemListView(listView,5,item) >= 0)
-                {
-                    continue;
-                }
                 string fileName = Path.GetFileNameWithoutExtension(item);
                 string fileExt = Path.GetExtension(item);
                 ListViewItem listViewItem = new ListViewItem();
-                listViewItem.Text = listView.Items.Count.ToString();
+                listViewItem.Text = "准备";
                 listViewItem.SubItems.Add(fileName);
-                listViewItem.SubItems.Add(fileName);
+                listViewItem.SubItems.Add("");
                 listViewItem.SubItems.Add(fileExt);
                 listViewItem.SubItems.Add(fileExt);
                 listViewItem.SubItems.Add(item);
                 listView.Items.Add(listViewItem);
             }
             listView.EndUpdate();
-            InitComboFileFilter(comboFileFilter, listView);
-            AutoResizeColumnWidth(listView);
         }
 
         /// <summary>
@@ -193,7 +204,7 @@ namespace RenameTool
             ofd.Multiselect = true;
             if (ofd.ShowDialog() == DialogResult.OK) 
             {
-                AddListViewFile(listViewFile, ofd.FileNames);
+                AddFilePath(ofd.FileNames);
             }
         }
 
@@ -241,7 +252,7 @@ namespace RenameTool
                 }
                 this.Invoke(new Action(() =>
                 {
-                    AddListViewFile(listView, listPath.ToArray());
+                    AddFilePath(listPath.ToArray());
                 }));
             });
         }
@@ -288,6 +299,28 @@ namespace RenameTool
             }
         }
 
+        /// <summary>
+        /// 选择文件过滤
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void comboFileFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string[] arrPath;
+            ComboBox comboBox = (ComboBox)sender;
+            ListView listView = listViewFile;
+            if (comboBox.SelectedIndex == 0)
+            {
+                arrPath = oldFilePathSet.GetPath();
+            }
+            else
+            {
+                arrPath = oldFilePathSet.GetPath(comboBox.SelectedItem.ToString());
+            }
+            UpdataListViewFile(listView, arrPath);
+        }
+
         #endregion
+
     }
 }

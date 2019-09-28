@@ -36,7 +36,7 @@ namespace RenameTool
         {
             foreach (string strPath in strPaths)
             {
-                getSetPath(Path.GetExtension(strPath)).Add(strPath);
+                getSetPath(getPathExt(strPath)).Add(strPath);
             }
         }
 
@@ -48,7 +48,7 @@ namespace RenameTool
         {
             foreach (string strPath in strPaths)
             {
-                string strExt = Path.GetExtension(strPath);
+                string strExt = getPathExt(strPath);
                 if (dicExtPath.TryGetValue(strExt, out HashSet<string> value))
                 {
                     value.Remove(strPath);
@@ -68,7 +68,7 @@ namespace RenameTool
         {
             foreach (string strExt in strExts)
             {
-                dicExtPath.Remove(strExt);
+                dicExtPath.Remove(strExt.ToLower().Trim());
             }
         }
 
@@ -135,15 +135,56 @@ namespace RenameTool
         /// <returns>路径数组</returns>
         public string[] GetPath()
         {
-            HashSet<string> setPath = new HashSet<string>();
+            List<string> listPath = new List<string>();
             foreach (KeyValuePair<string,HashSet<string>> item in dicExtPath)
             {
                 if (item.Value.Count > 0)
                 {
-                    setPath.Union(item.Value);
+                    listPath.AddRange(item.Value.ToArray());
                 }
             }
-            return setPath.ToArray();
+            return listPath.ToArray();
+        }
+
+        /// <summary>
+        /// 获取扩展名数量
+        /// </summary>
+        /// <returns></returns>
+        public int CountExt()
+        {
+            return dicExtPath.Count;
+        }
+
+        /// <summary>
+        /// 获取指定扩展名的文件数量
+        /// </summary>
+        /// <param name="strExt">扩展名</param>
+        /// <returns></returns>
+        public int CountPath(string strExt)
+        {
+            if (dicExtPath.TryGetValue(strExt.ToLower().Trim(), out HashSet<string> value))
+            {
+                if (value.Count == 0)
+                {
+                    RemoveExt(strExt);
+                }
+                return value.Count;
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// 获取全部文件数量
+        /// </summary>
+        /// <returns></returns>
+        public int CountPath()
+        {
+            int ret = 0;
+            foreach (string strExt in dicExtPath.Keys.ToArray())
+            {
+                ret += CountPath(strExt);
+            }
+            return ret;
         }
         #endregion
 
@@ -164,6 +205,16 @@ namespace RenameTool
                 dicExtPath.Add(strExt, new HashSet<string>());
                 return getSetPath(strExt);
             }
+        }
+
+        /// <summary>
+        /// 获取文件路径中的扩展名
+        /// </summary>
+        /// <param name="strPath">文件路径</param>
+        /// <returns></returns>
+        private string getPathExt(string strPath)
+        {
+            return Path.GetExtension(strPath).Trim().ToLower();
         }
         #endregion
     }
