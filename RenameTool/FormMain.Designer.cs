@@ -63,8 +63,7 @@
             this.radioNumberPrefix = new System.Windows.Forms.RadioButton();
             this.radioRegexPrefix = new System.Windows.Forms.RadioButton();
             this.radioTextPrefix = new System.Windows.Forms.RadioButton();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
+            this.txtEditExt = new System.Windows.Forms.TextBox();
             this.chkHidden = new System.Windows.Forms.CheckBox();
             this.chkSubPath = new System.Windows.Forms.CheckBox();
             this.btnClearFile = new System.Windows.Forms.Button();
@@ -74,6 +73,7 @@
             this.comboFileFilter = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.listViewFile = new System.Windows.Forms.ListView();
+            this.chkEditExt = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
             this.splitContainerMain.Panel2.SuspendLayout();
@@ -102,8 +102,8 @@
             this.splitContainerMain.Panel1.Controls.Add(this.groupBoxPostfix);
             this.splitContainerMain.Panel1.Controls.Add(this.groupBoxMiddle);
             this.splitContainerMain.Panel1.Controls.Add(this.groupBoxFileNamePrefix);
-            this.splitContainerMain.Panel1.Controls.Add(this.textBox1);
-            this.splitContainerMain.Panel1.Controls.Add(this.label8);
+            this.splitContainerMain.Panel1.Controls.Add(this.txtEditExt);
+            this.splitContainerMain.Panel1.Controls.Add(this.chkEditExt);
             this.splitContainerMain.Panel1MinSize = 180;
             // 
             // splitContainerMain.Panel2
@@ -132,6 +132,7 @@
             this.btnSiteName.TabIndex = 28;
             this.btnSiteName.Text = "执行命名规则";
             this.btnSiteName.UseVisualStyleBackColor = true;
+            this.btnSiteName.Click += new System.EventHandler(this.btnSiteName_Click);
             // 
             // groupBoxPostfix
             // 
@@ -164,6 +165,7 @@
             this.chkSampPostfix.Tag = "Postfix";
             this.chkSampPostfix.Text = "等宽";
             this.chkSampPostfix.UseVisualStyleBackColor = true;
+            this.chkSampPostfix.CheckedChanged += new System.EventHandler(this.numNumber_ValueChanged);
             // 
             // numStepPostfix
             // 
@@ -185,6 +187,7 @@
             0,
             0,
             0});
+            this.numStepPostfix.ValueChanged += new System.EventHandler(this.numNumber_ValueChanged);
             // 
             // numStartPostfix
             // 
@@ -211,6 +214,7 @@
             0,
             0,
             0});
+            this.numStartPostfix.ValueChanged += new System.EventHandler(this.numNumber_ValueChanged);
             // 
             // label6
             // 
@@ -241,6 +245,7 @@
             this.txtRegexPostfix.Size = new System.Drawing.Size(100, 21);
             this.txtRegexPostfix.TabIndex = 22;
             this.txtRegexPostfix.Tag = "Postfix";
+            this.txtRegexPostfix.TextChanged += new System.EventHandler(this.txtRegex_TextChanged);
             // 
             // txtTextPostfix
             // 
@@ -251,6 +256,7 @@
             this.txtTextPostfix.Size = new System.Drawing.Size(100, 21);
             this.txtTextPostfix.TabIndex = 20;
             this.txtTextPostfix.Tag = "Postfix";
+            this.txtTextPostfix.TextChanged += new System.EventHandler(this.txtText_TextChanged);
             // 
             // radioNumberPostfix
             // 
@@ -316,6 +322,7 @@
             this.chkSampMiddle.Tag = "Middle";
             this.chkSampMiddle.Text = "等宽";
             this.chkSampMiddle.UseVisualStyleBackColor = true;
+            this.chkSampMiddle.CheckedChanged += new System.EventHandler(this.numNumber_ValueChanged);
             // 
             // numStepMiddle
             // 
@@ -337,6 +344,7 @@
             0,
             0,
             0});
+            this.numStepMiddle.ValueChanged += new System.EventHandler(this.numNumber_ValueChanged);
             // 
             // numStartMiddle
             // 
@@ -363,6 +371,7 @@
             0,
             0,
             0});
+            this.numStartMiddle.ValueChanged += new System.EventHandler(this.numNumber_ValueChanged);
             // 
             // label4
             // 
@@ -393,6 +402,7 @@
             this.txtRegexMiddle.Size = new System.Drawing.Size(100, 21);
             this.txtRegexMiddle.TabIndex = 14;
             this.txtRegexMiddle.Tag = "Middle";
+            this.txtRegexMiddle.TextChanged += new System.EventHandler(this.txtRegex_TextChanged);
             // 
             // txtTextMiddle
             // 
@@ -403,6 +413,7 @@
             this.txtTextMiddle.Size = new System.Drawing.Size(100, 21);
             this.txtTextMiddle.TabIndex = 12;
             this.txtTextMiddle.Tag = "Middle";
+            this.txtTextMiddle.TextChanged += new System.EventHandler(this.txtText_TextChanged);
             // 
             // radioNumberMiddle
             // 
@@ -468,6 +479,7 @@
             this.chkSampPrefix.Tag = "Prefix";
             this.chkSampPrefix.Text = "等宽";
             this.chkSampPrefix.UseVisualStyleBackColor = true;
+            this.chkSampPrefix.CheckedChanged += new System.EventHandler(this.numNumber_ValueChanged);
             // 
             // numStepPrefix
             // 
@@ -489,6 +501,7 @@
             0,
             0,
             0});
+            this.numStepPrefix.ValueChanged += new System.EventHandler(this.numNumber_ValueChanged);
             // 
             // numStartPrefix
             // 
@@ -515,6 +528,7 @@
             0,
             0,
             0});
+            this.numStartPrefix.ValueChanged += new System.EventHandler(this.numNumber_ValueChanged);
             // 
             // label3
             // 
@@ -545,6 +559,7 @@
             this.txtRegexPrefix.Size = new System.Drawing.Size(100, 21);
             this.txtRegexPrefix.TabIndex = 6;
             this.txtRegexPrefix.Tag = "Prefix";
+            this.txtRegexPrefix.TextChanged += new System.EventHandler(this.txtRegex_TextChanged);
             // 
             // txtTextPrefix
             // 
@@ -555,6 +570,7 @@
             this.txtTextPrefix.Size = new System.Drawing.Size(100, 21);
             this.txtTextPrefix.TabIndex = 4;
             this.txtTextPrefix.Tag = "Prefix";
+            this.txtTextPrefix.TextChanged += new System.EventHandler(this.txtText_TextChanged);
             // 
             // radioNumberPrefix
             // 
@@ -589,25 +605,16 @@
             this.radioTextPrefix.Text = "文本内容：";
             this.radioTextPrefix.UseVisualStyleBackColor = true;
             // 
-            // textBox1
+            // txtEditExt
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.txtEditExt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(83, 397);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(108, 21);
-            this.textBox1.TabIndex = 27;
-            this.textBox1.Tag = "Prefix";
-            // 
-            // label8
-            // 
-            this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(12, 401);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(77, 12);
-            this.label8.TabIndex = 1;
-            this.label8.Text = "规则连接符：";
+            this.txtEditExt.Location = new System.Drawing.Point(74, 397);
+            this.txtEditExt.Name = "txtEditExt";
+            this.txtEditExt.Size = new System.Drawing.Size(117, 21);
+            this.txtEditExt.TabIndex = 27;
+            this.txtEditExt.Tag = "Prefix";
+            this.txtEditExt.TextChanged += new System.EventHandler(this.txtEditExt_TextChanged);
             // 
             // chkHidden
             // 
@@ -708,6 +715,16 @@
             this.listViewFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewFile_DragDrop);
             this.listViewFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewFile_DragEnter);
             // 
+            // chkEditExt
+            // 
+            this.chkEditExt.AutoSize = true;
+            this.chkEditExt.Location = new System.Drawing.Point(12, 400);
+            this.chkEditExt.Name = "chkEditExt";
+            this.chkEditExt.Size = new System.Drawing.Size(72, 16);
+            this.chkEditExt.TabIndex = 29;
+            this.chkEditExt.Text = "扩展名：";
+            this.chkEditExt.UseVisualStyleBackColor = true;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -778,8 +795,7 @@
         private System.Windows.Forms.RadioButton radioNumberPrefix;
         private System.Windows.Forms.RadioButton radioRegexPrefix;
         private System.Windows.Forms.RadioButton radioTextPrefix;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox txtEditExt;
         private System.Windows.Forms.Button btnAddFile;
         private System.Windows.Forms.ProgressBar progressRename;
         private System.Windows.Forms.Button btnStartRun;
@@ -789,6 +805,7 @@
         private System.Windows.Forms.CheckBox chkHidden;
         private System.Windows.Forms.CheckBox chkSubPath;
         private System.Windows.Forms.Button btnClearFile;
+        private System.Windows.Forms.CheckBox chkEditExt;
     }
 }
 

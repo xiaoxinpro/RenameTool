@@ -15,7 +15,6 @@ namespace RenameTool
     {
         #region 私有字段
         private FilePathSet objFilePathSet = new FilePathSet();
-        private FilePathSet newFilePathSet = new FilePathSet();
         #endregion
 
         #region 初始化相关
@@ -220,13 +219,11 @@ namespace RenameTool
             if (comboFileFilter.SelectedIndex == 0)
             {
                 objFilePathSet.Clear();
-                newFilePathSet.Clear();
                 InitComboFileFilter(comboFileFilter, objFilePathSet);
             }
             else
             {
                 objFilePathSet.RemoveExt(comboFileFilter.SelectedItem.ToString());
-                newFilePathSet.RemoveExt(comboFileFilter.SelectedItem.ToString());
                 InitComboFileFilter(comboFileFilter, objFilePathSet);
             }
         }
@@ -343,7 +340,94 @@ namespace RenameTool
             UpdataListViewFile(listView, dictPath);
         }
 
+        #endregion
 
+        #region 文件命名规则窗口控件
+        /// <summary>
+        /// 文本输入框改变
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void txtText_TextChanged(object sender, EventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            if (radioTextPrefix.Tag == textBox.Tag)
+            {
+                radioTextPrefix.Checked = true;
+            }
+            else if(radioTextMiddle.Tag == textBox.Tag)
+            {
+                radioTextMiddle.Checked = true;
+            }
+            else if (radioTextPostfix.Tag == textBox.Tag)
+            {
+                radioTextPostfix.Checked = true;
+            }
+        }
+
+        /// <summary>
+        /// 正则输入框改变
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void txtRegex_TextChanged(object sender, EventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            if (radioRegexPrefix.Tag == textBox.Tag)
+            {
+                radioRegexPrefix.Checked = true;
+            }
+            else if (radioRegexMiddle.Tag == textBox.Tag)
+            {
+                radioRegexMiddle.Checked = true;
+            }
+            else if (radioRegexPostfix.Tag == textBox.Tag)
+            {
+                radioRegexPostfix.Checked = true;
+            }
+        }
+
+        /// <summary>
+        /// 序号输入框改变
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void numNumber_ValueChanged(object sender, EventArgs e)
+        {
+            Control num = (Control)sender;
+            if (radioNumberPrefix.Tag == num.Tag)
+            {
+                radioNumberPrefix.Checked = true;
+            }
+            else if (radioNumberMiddle.Tag == num.Tag)
+            {
+                radioNumberMiddle.Checked = true;
+            }
+            else if (radioNumberPostfix.Tag == num.Tag)
+            {
+                radioNumberPostfix.Checked = true;
+            }
+        }
+
+        /// <summary>
+        /// 修改扩展名
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void txtEditExt_TextChanged(object sender, EventArgs e)
+        {
+            chkEditExt.Checked = true;
+        }
+
+        /// <summary>
+        /// 执行命名规则按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnSiteName_Click(object sender, EventArgs e)
+        {
+
+        }
 
         #endregion
     }
