@@ -426,7 +426,69 @@ namespace RenameTool
         /// <param name="e"></param>
         private void btnSiteName_Click(object sender, EventArgs e)
         {
+            Dictionary<string, string> dictPath;
+            if (listViewFile.SelectedItems.Count > 0)
+            {
+                dictPath = new Dictionary<string, string>();
+                for (int i = 0; i < listViewFile.SelectedItems.Count; i++)
+                {
+                    dictPath.Add(listViewFile.SelectedItems[i].SubItems[5].Text, "");
+                }
+            }
+            else if (comboFileFilter.SelectedIndex == 0)
+            {
+                dictPath = new Dictionary<string, string>(objFilePathSet.GetDictPath());
+            }
+            else
+            {
+                dictPath = new Dictionary<string, string>(objFilePathSet.GetDictPath(comboFileFilter.SelectedItem.ToString()));
+            }
+            FilePathRule.Clear();
+            FilePathRule.Add(GetFilePathRule(groupBoxPrefix));
+            FilePathRule.Add(GetFilePathRule(groupBoxMiddle));
+            FilePathRule.Add(GetFilePathRule(groupBoxPostfix));
+            FilePathRule.Rename(dictPath);
+            foreach (KeyValuePair<string, string> item in dictPath)
+            {
+                objFilePathSet.Edit(item.Key, item.Value);
+            }
+            UpdataListViewFile(listViewFile, dictPath);
+        }
 
+        private FilePathRule GetFilePathRule(GroupBox groupRule)
+        {
+            string ruleName = groupRule.Tag.ToString();
+            RadioButton radioText = GetGroupControl(groupRule, "radioText") as RadioButton;
+            RadioButton radioRegex = GetGroupControl(groupRule, "radioRegex") as RadioButton;
+            RadioButton radioNumber = GetGroupControl(groupRule, "radioNumber") as RadioButton;
+            if (radioText.Checked)
+            {
+                return new FilePathRuleText(ruleName, (GetGroupControl(groupRule, "txtText") as TextBox).Text);
+            }
+            else if (radioRegex.Checked)
+            {
+                return new FilePathRuleRegex(ruleName, (GetGroupControl(groupRule, "txtRegex") as TextBox).Text);
+            }
+            else if (radioNumber.Checked)
+            {
+                return new FilePathRuleNumber(ruleName, (GetGroupControl(groupRule, "numStart") as NumericUpDown).Value, (GetGroupControl(groupRule, "numStep") as NumericUpDown).Value, (GetGroupControl(groupRule, "chkSamp") as CheckBox).Checked);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private Control GetGroupControl(GroupBox group, string name)
+        {
+            foreach (Control item in group.Controls)
+            {
+                if (item.Name.IndexOf(name) >= 0)
+                {
+                    return item;
+                }
+            }
+            return null;
         }
 
         #endregion

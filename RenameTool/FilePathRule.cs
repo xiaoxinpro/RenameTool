@@ -34,10 +34,11 @@ namespace RenameTool
         {
             FileLength = dictPath.Count;
             RunCount = 0;
-            foreach (KeyValuePair<string,string> item in dictPath)
+            string[] arrKey = dictPath.Keys.ToArray();
+            foreach (string key in arrKey)
             {
                 StringBuilder sbFileName = new StringBuilder();
-                string fileName = Path.GetFileNameWithoutExtension(item.Key);
+                string fileName = Path.GetFileNameWithoutExtension(key);
                 foreach (FilePathRule rule in listFilePathRule)
                 {
                     if (rule is FilePathRuleText)
@@ -57,13 +58,16 @@ namespace RenameTool
                         sbFileName.Append(rule.Run(fileName));
                     }
                 }
-                dictPath[item.Key] = Path.GetDirectoryName(item.Key) + sbFileName.ToString() + Path.GetExtension(item.Key);
+                dictPath[key] = Path.GetDirectoryName(key) + @"\" + sbFileName.ToString() + Path.GetExtension(key);
             }
         }
 
         public static void Add(FilePathRule rule)
         {
-            listFilePathRule.Add(rule);
+            if (rule != null)
+            {
+                listFilePathRule.Add(rule);
+            }
         }
 
         public static void Clear()

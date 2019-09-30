@@ -52,7 +52,7 @@
             this.radioNumberMiddle = new System.Windows.Forms.RadioButton();
             this.radioRegexMiddle = new System.Windows.Forms.RadioButton();
             this.radioTextMiddle = new System.Windows.Forms.RadioButton();
-            this.groupBoxFileNamePrefix = new System.Windows.Forms.GroupBox();
+            this.groupBoxPrefix = new System.Windows.Forms.GroupBox();
             this.chkSampPrefix = new System.Windows.Forms.CheckBox();
             this.numStepPrefix = new System.Windows.Forms.NumericUpDown();
             this.numStartPrefix = new System.Windows.Forms.NumericUpDown();
@@ -64,6 +64,7 @@
             this.radioRegexPrefix = new System.Windows.Forms.RadioButton();
             this.radioTextPrefix = new System.Windows.Forms.RadioButton();
             this.txtEditExt = new System.Windows.Forms.TextBox();
+            this.chkEditExt = new System.Windows.Forms.CheckBox();
             this.chkHidden = new System.Windows.Forms.CheckBox();
             this.chkSubPath = new System.Windows.Forms.CheckBox();
             this.btnClearFile = new System.Windows.Forms.Button();
@@ -73,7 +74,6 @@
             this.comboFileFilter = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.listViewFile = new System.Windows.Forms.ListView();
-            this.chkEditExt = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
             this.splitContainerMain.Panel2.SuspendLayout();
@@ -84,7 +84,7 @@
             this.groupBoxMiddle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numStepMiddle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numStartMiddle)).BeginInit();
-            this.groupBoxFileNamePrefix.SuspendLayout();
+            this.groupBoxPrefix.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numStepPrefix)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numStartPrefix)).BeginInit();
             this.SuspendLayout();
@@ -101,7 +101,7 @@
             this.splitContainerMain.Panel1.Controls.Add(this.btnSiteName);
             this.splitContainerMain.Panel1.Controls.Add(this.groupBoxPostfix);
             this.splitContainerMain.Panel1.Controls.Add(this.groupBoxMiddle);
-            this.splitContainerMain.Panel1.Controls.Add(this.groupBoxFileNamePrefix);
+            this.splitContainerMain.Panel1.Controls.Add(this.groupBoxPrefix);
             this.splitContainerMain.Panel1.Controls.Add(this.txtEditExt);
             this.splitContainerMain.Panel1.Controls.Add(this.chkEditExt);
             this.splitContainerMain.Panel1MinSize = 180;
@@ -153,6 +153,7 @@
             this.groupBoxPostfix.Size = new System.Drawing.Size(194, 128);
             this.groupBoxPostfix.TabIndex = 0;
             this.groupBoxPostfix.TabStop = false;
+            this.groupBoxPostfix.Tag = "Postfix";
             this.groupBoxPostfix.Text = "文件名后缀";
             // 
             // chkSampPostfix
@@ -310,6 +311,7 @@
             this.groupBoxMiddle.Size = new System.Drawing.Size(194, 128);
             this.groupBoxMiddle.TabIndex = 0;
             this.groupBoxMiddle.TabStop = false;
+            this.groupBoxMiddle.Tag = "Middle";
             this.groupBoxMiddle.Text = "文件名中间";
             // 
             // chkSampMiddle
@@ -448,26 +450,27 @@
             this.radioTextMiddle.Text = "文本内容：";
             this.radioTextMiddle.UseVisualStyleBackColor = true;
             // 
-            // groupBoxFileNamePrefix
+            // groupBoxPrefix
             // 
-            this.groupBoxFileNamePrefix.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBoxPrefix.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxFileNamePrefix.Controls.Add(this.chkSampPrefix);
-            this.groupBoxFileNamePrefix.Controls.Add(this.numStepPrefix);
-            this.groupBoxFileNamePrefix.Controls.Add(this.numStartPrefix);
-            this.groupBoxFileNamePrefix.Controls.Add(this.label3);
-            this.groupBoxFileNamePrefix.Controls.Add(this.label2);
-            this.groupBoxFileNamePrefix.Controls.Add(this.txtRegexPrefix);
-            this.groupBoxFileNamePrefix.Controls.Add(this.txtTextPrefix);
-            this.groupBoxFileNamePrefix.Controls.Add(this.radioNumberPrefix);
-            this.groupBoxFileNamePrefix.Controls.Add(this.radioRegexPrefix);
-            this.groupBoxFileNamePrefix.Controls.Add(this.radioTextPrefix);
-            this.groupBoxFileNamePrefix.Location = new System.Drawing.Point(3, 4);
-            this.groupBoxFileNamePrefix.Name = "groupBoxFileNamePrefix";
-            this.groupBoxFileNamePrefix.Size = new System.Drawing.Size(194, 128);
-            this.groupBoxFileNamePrefix.TabIndex = 0;
-            this.groupBoxFileNamePrefix.TabStop = false;
-            this.groupBoxFileNamePrefix.Text = "文件名前缀";
+            this.groupBoxPrefix.Controls.Add(this.chkSampPrefix);
+            this.groupBoxPrefix.Controls.Add(this.numStepPrefix);
+            this.groupBoxPrefix.Controls.Add(this.numStartPrefix);
+            this.groupBoxPrefix.Controls.Add(this.label3);
+            this.groupBoxPrefix.Controls.Add(this.label2);
+            this.groupBoxPrefix.Controls.Add(this.txtRegexPrefix);
+            this.groupBoxPrefix.Controls.Add(this.txtTextPrefix);
+            this.groupBoxPrefix.Controls.Add(this.radioNumberPrefix);
+            this.groupBoxPrefix.Controls.Add(this.radioRegexPrefix);
+            this.groupBoxPrefix.Controls.Add(this.radioTextPrefix);
+            this.groupBoxPrefix.Location = new System.Drawing.Point(3, 4);
+            this.groupBoxPrefix.Name = "groupBoxPrefix";
+            this.groupBoxPrefix.Size = new System.Drawing.Size(194, 128);
+            this.groupBoxPrefix.TabIndex = 0;
+            this.groupBoxPrefix.TabStop = false;
+            this.groupBoxPrefix.Tag = "Prefix";
+            this.groupBoxPrefix.Text = "文件名前缀";
             // 
             // chkSampPrefix
             // 
@@ -616,6 +619,16 @@
             this.txtEditExt.Tag = "Prefix";
             this.txtEditExt.TextChanged += new System.EventHandler(this.txtEditExt_TextChanged);
             // 
+            // chkEditExt
+            // 
+            this.chkEditExt.AutoSize = true;
+            this.chkEditExt.Location = new System.Drawing.Point(12, 400);
+            this.chkEditExt.Name = "chkEditExt";
+            this.chkEditExt.Size = new System.Drawing.Size(72, 16);
+            this.chkEditExt.TabIndex = 29;
+            this.chkEditExt.Text = "扩展名：";
+            this.chkEditExt.UseVisualStyleBackColor = true;
+            // 
             // chkHidden
             // 
             this.chkHidden.AutoSize = true;
@@ -715,16 +728,6 @@
             this.listViewFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewFile_DragDrop);
             this.listViewFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewFile_DragEnter);
             // 
-            // chkEditExt
-            // 
-            this.chkEditExt.AutoSize = true;
-            this.chkEditExt.Location = new System.Drawing.Point(12, 400);
-            this.chkEditExt.Name = "chkEditExt";
-            this.chkEditExt.Size = new System.Drawing.Size(72, 16);
-            this.chkEditExt.TabIndex = 29;
-            this.chkEditExt.Text = "扩展名：";
-            this.chkEditExt.UseVisualStyleBackColor = true;
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -750,8 +753,8 @@
             this.groupBoxMiddle.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numStepMiddle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numStartMiddle)).EndInit();
-            this.groupBoxFileNamePrefix.ResumeLayout(false);
-            this.groupBoxFileNamePrefix.PerformLayout();
+            this.groupBoxPrefix.ResumeLayout(false);
+            this.groupBoxPrefix.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numStepPrefix)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numStartPrefix)).EndInit();
             this.ResumeLayout(false);
@@ -784,7 +787,7 @@
         private System.Windows.Forms.RadioButton radioNumberMiddle;
         private System.Windows.Forms.RadioButton radioRegexMiddle;
         private System.Windows.Forms.RadioButton radioTextMiddle;
-        private System.Windows.Forms.GroupBox groupBoxFileNamePrefix;
+        private System.Windows.Forms.GroupBox groupBoxPrefix;
         private System.Windows.Forms.CheckBox chkSampPrefix;
         private System.Windows.Forms.NumericUpDown numStepPrefix;
         private System.Windows.Forms.NumericUpDown numStartPrefix;
