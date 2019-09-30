@@ -444,9 +444,35 @@ namespace RenameTool
                 dictPath = new Dictionary<string, string>(objFilePathSet.GetDictPath(comboFileFilter.SelectedItem.ToString()));
             }
             FilePathRule.Clear();
-            FilePathRule.Add(GetFilePathRule(groupBoxPrefix));
-            FilePathRule.Add(GetFilePathRule(groupBoxMiddle));
-            FilePathRule.Add(GetFilePathRule(groupBoxPostfix));
+            FilePathRule.Add(GetFilePathRule(groupBoxPrefix, out string strErrorPrefix));
+            FilePathRule.Add(GetFilePathRule(groupBoxMiddle, out string strErrorMiddle));
+            FilePathRule.Add(GetFilePathRule(groupBoxPostfix, out string strErrorPostfix));
+            FilePathRule.ForceExtension(chkEditExt.Checked, txtEditExt.Text);
+            if (strErrorPrefix != "OK")
+            {
+                MessageBox.Show(strErrorPrefix, "文件名前缀错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            else if (strErrorMiddle != "OK")
+            {
+                MessageBox.Show(strErrorMiddle, "文件名中间错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            else if (strErrorPostfix != "OK")
+            {
+                MessageBox.Show(strErrorPostfix, "文件名后缀错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            else if (FilePathRule.RuleCount() <= 0)
+            {
+                MessageBox.Show("无使能任何命名规格，请先配置命名规则。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            else if (dictPath.Count == 0)
+            {
+                MessageBox.Show("目标文件目录为空，请先导入文件。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             FilePathRule.Rename(dictPath);
             foreach (KeyValuePair<string, string> item in dictPath)
             {
@@ -455,18 +481,42 @@ namespace RenameTool
             UpdataListViewFile(listViewFile, dictPath);
         }
 
-        private FilePathRule GetFilePathRule(GroupBox groupRule)
+        /// <summary>
+        /// 获取GroupBox中的规则到FilePathRule类中
+        /// </summary>
+        /// <param name="groupRule">GroupBox控件</param>
+        /// <param name="err">错误提示</param>
+        /// <returns></returns>
+        private FilePathRule GetFilePathRule(GroupBox groupRule, out string err)
         {
+            err = "OK";
             string ruleName = groupRule.Tag.ToString();
             RadioButton radioText = GetGroupControl(groupRule, "radioText") as RadioButton;
             RadioButton radioRegex = GetGroupControl(groupRule, "radioRegex") as RadioButton;
             RadioButton radioNumber = GetGroupControl(groupRule, "radioNumber") as RadioButton;
             if (radioText.Checked)
             {
-                return new FilePathRuleText(ruleName, (GetGroupControl(groupRule, "txtText") as TextBox).Text);
+                TextBox textBox = GetGroupControl(groupRule, "txtText") as TextBox;
+                if (string.IsNullOrEmpty(textBox.Text))
+                {
+                    err = "OK";
+                    return null;
+                }
+                else if (textBox.Text.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+                {
+                    err = "文件名存在非法字符。";
+                    return null;
+                }
+                return new FilePathRuleText(ruleName, textBox.Text);
             }
             else if (radioRegex.Checked)
             {
+                TextBox textBox = GetGroupControl(groupRule, "txtRegex") as TextBox;
+                if (string.IsNullOrEmpty(textBox.Text))
+                {
+                    err = "OK";
+                    return null;
+                }
                 return new FilePathRuleRegex(ruleName, (GetGroupControl(groupRule, "txtRegex") as TextBox).Text);
             }
             else if (radioNumber.Checked)
@@ -475,10 +525,17 @@ namespace RenameTool
             }
             else
             {
+                err = "OK";
                 return null;
             }
         }
 
+        /// <summary>
+        /// 从GroupBox中获取指定名字开头的控件
+        /// </summary>
+        /// <param name="group">GroupBox控件</param>
+        /// <param name="name">控件名字或控件名字的一部分</param>
+        /// <returns></returns>
         private Control GetGroupControl(GroupBox group, string name)
         {
             foreach (Control item in group.Controls)

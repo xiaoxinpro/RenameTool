@@ -26,10 +26,24 @@ namespace RenameTool
 
         #region 静态字段
         private static List<FilePathRule> listFilePathRule = new List<FilePathRule>();
-        
+        private static bool isExtension = false;
+        private static string strExtension = "";
         #endregion
 
         #region 静态函数
+        public static void ForceExtension(bool isEnable, string strExt = "")
+        {
+            isExtension = isEnable;
+            if (strExt.Length > 0)
+            {
+                strExtension = strExt.IndexOf(".") == 0 ? strExt : "." + strExt;
+            }
+            else
+            {
+                strExtension = strExt;
+            }
+        }
+
         public static void Rename(Dictionary<string, string> dictPath)
         {
             FileLength = dictPath.Count;
@@ -58,7 +72,16 @@ namespace RenameTool
                         sbFileName.Append(rule.Run(fileName));
                     }
                 }
-                dictPath[key] = Path.GetDirectoryName(key) + @"\" + sbFileName.ToString() + Path.GetExtension(key);
+                string strExt;
+                if (isExtension)
+                {
+                    strExt = strExtension;
+                }
+                else
+                {
+                    strExt = Path.GetExtension(key);
+                }
+                dictPath[key] = Path.GetDirectoryName(key) + @"\" + sbFileName.ToString() + strExt;
             }
         }
 
@@ -68,6 +91,11 @@ namespace RenameTool
             {
                 listFilePathRule.Add(rule);
             }
+        }
+
+        public static int RuleCount()
+        {
+            return listFilePathRule.Count;
         }
 
         public static void Clear()
