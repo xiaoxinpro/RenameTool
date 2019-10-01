@@ -689,6 +689,7 @@
             this.btnStartRun.TabIndex = 99;
             this.btnStartRun.Text = "开始重命名";
             this.btnStartRun.UseVisualStyleBackColor = true;
+            this.btnStartRun.Click += new System.EventHandler(this.btnStartRun_Click);
             // 
             // comboFileFilter
             // 

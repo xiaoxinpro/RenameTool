@@ -549,5 +549,37 @@ namespace RenameTool
         }
 
         #endregion
+
+        #region 重命名逻辑
+        /// <summary>
+        /// 开始重命名
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnStartRun_Click(object sender, EventArgs e)
+        {
+            comboFileFilter.SelectedIndex = 0;
+            Dictionary<string, string> dictPath = objFilePathSet.GetDictPath();
+            FilePathRename.Run(dictPath, out string err);
+            if (dictPath.Count == 0 && err == "")
+            {
+                MessageBox.Show("重命名完成！");
+            }
+            else if (err.Length > 0)
+            {
+                MessageBox.Show(err, "重命名过程中出现错误");
+            }
+            else
+            {
+                MessageBox.Show("有" + dictPath.Count.ToString() + "未成功重命名，请检查最终文件。", "未知错误");
+            }
+        }
+
+        //private void FileRename()
+        //{
+        //    Dictionary<string, string> dictPath = objFilePathSet.GetDictPath();
+        //}
+
+        #endregion
     }
 }
