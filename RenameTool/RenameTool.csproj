@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FilePathRename.cs" />
     <Compile Include="FilePathRule.cs" />
     <Compile Include="FilePathSet.cs" />
     <Compile Include="FormMain.cs">
