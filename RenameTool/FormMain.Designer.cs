@@ -621,6 +621,7 @@
             // 
             // chkEditExt
             // 
+            this.chkEditExt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.chkEditExt.AutoSize = true;
             this.chkEditExt.Location = new System.Drawing.Point(12, 400);
             this.chkEditExt.Name = "chkEditExt";

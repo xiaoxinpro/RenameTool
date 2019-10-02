@@ -110,6 +110,10 @@ namespace RenameTool
         private void UpdataListViewFile(ListView listView, Dictionary<string, string> dictPath)
         {
             listView.Items.Clear();
+            if (dictPath == null)
+            {
+                return;
+            }
             listView.BeginUpdate();
             foreach (KeyValuePair<string,string> item in dictPath)
             {
@@ -560,25 +564,44 @@ namespace RenameTool
         {
             comboFileFilter.SelectedIndex = 0;
             Dictionary<string, string> dictPath = objFilePathSet.GetDictPath();
-            FilePathRename.Run(dictPath, out string err);
-            if (dictPath.Count == 0 && err == "")
+            string[] arrOldPath = dictPath.Keys.ToArray();
+            progressRename.Maximum = arrOldPath.Length;
+            foreach (string strOldPath in arrOldPath)
             {
-                MessageBox.Show("重命名完成！");
+                FilePathRename.Run(strOldPath, dictPath[strOldPath], out string err);
+                if (string.IsNullOrEmpty(err))
+                {
+                    SetListViewFileStatus(listViewFile, strOldPath, "完成");
+                    objFilePathSet.RemovePath(strOldPath);
+                }
+                else
+                {
+                    SetListViewFileStatus(listViewFile, strOldPath, "失败");
+                }
+                progressRename.PerformStep();
             }
-            else if (err.Length > 0)
-            {
-                MessageBox.Show(err, "重命名过程中出现错误");
-            }
-            else
-            {
-                MessageBox.Show("有" + dictPath.Count.ToString() + "未成功重命名，请检查最终文件。", "未知错误");
-            }
+            progressRename.Value = progressRename.Maximum;
+            MessageBox.Show(string.Format("重命名完成，成功{0}个，失败{1}个。", (arrOldPath.Length - objFilePathSet.CountPath()), objFilePathSet.CountPath()), "重命名完成", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            progressRename.Value = 0;
         }
 
-        //private void FileRename()
-        //{
-        //    Dictionary<string, string> dictPath = objFilePathSet.GetDictPath();
-        //}
+        /// <summary>
+        /// 设置列表状态
+        /// </summary>
+        /// <param name="listView">列表控件</param>
+        /// <param name="path">文件路径</param>
+        /// <param name="strStatus">状态字符串</param>
+        private void SetListViewFileStatus(ListView listView, string path, string strStatus)
+        {
+            foreach (ListViewItem item in listView.Items)
+            {
+                if (path == item.SubItems[5].Text)
+                {
+                    item.Text = strStatus;
+                    return;
+                }
+            }
+        }
 
         #endregion
     }
