@@ -740,6 +740,7 @@
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "文件批量重命名工具";
+            this.Activated += new System.EventHandler(this.FormMain_Activated);
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.splitContainerMain.Panel1.ResumeLayout(false);
             this.splitContainerMain.Panel1.PerformLayout();

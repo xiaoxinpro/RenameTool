@@ -13,8 +13,8 @@ namespace RenameTool
         #region 公共属性
         public string Name { get; set; }
 
-        public static int RunCount { get; protected set; } = 0;
         public static int FileLength { get; private set; } = 0;
+        public virtual int RunCount { get; protected set; } = 0;
         #endregion
 
         #region 公共方法
@@ -47,7 +47,6 @@ namespace RenameTool
         public static void Rename(Dictionary<string, string> dictPath)
         {
             FileLength = dictPath.Count;
-            RunCount = 0;
             string[] arrKey = dictPath.Keys.ToArray();
             foreach (string key in arrKey)
             {
@@ -101,7 +100,6 @@ namespace RenameTool
         public static void Clear()
         {
             listFilePathRule.Clear();
-            RunCount = 0;
         }
 
         public static void Remove(int index)
@@ -175,15 +173,18 @@ namespace RenameTool
     public class FilePathRuleText : FilePathRule
     {
         public string Text { get; set; }
+        public override int RunCount { get; protected set; } = 0;
 
         public FilePathRuleText(string name, string text = "")
         {
             Name = name;
             Text = text;
+            RunCount = 0;
         }
 
         public override string Run(string strFileName)
         {
+            RunCount++;
             return base.Run(Text);
         }
     }
@@ -191,15 +192,18 @@ namespace RenameTool
     public class FilePathRuleRegex : FilePathRule
     {
         public string Pattern { get; set; }
+        public override int RunCount { get; protected set; } = 0;
 
         public FilePathRuleRegex(string name, string regex = "")
         {
             Name = name;
             Pattern = regex;
+            RunCount = 0;
         }
 
         public override string Run(string strFileName)
         {
+            RunCount++;
             return base.Run(Regex.Match(Path.GetFileNameWithoutExtension(strFileName), Pattern).Value);
         }
     }
@@ -209,6 +213,7 @@ namespace RenameTool
         public decimal Start { get; set; }
         public decimal Step { get; set; }
         public bool IsSamp { get; set; }
+        public override int RunCount { get; protected set; } = 0;
 
         public FilePathRuleNumber(string name, decimal start = 1, decimal step = 1, bool isSamp = false)
         {
@@ -216,6 +221,7 @@ namespace RenameTool
             Start = start;
             Step = step;
             IsSamp = isSamp;
+            RunCount = 0;
         }
 
         public override string Run(string strFileName)

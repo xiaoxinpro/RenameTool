@@ -39,6 +39,15 @@ namespace RenameTool
             InitComboFileFilter(comboFileFilter);
         }
 
+        /// <summary>
+        /// 窗体获取焦点时触发
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FormMain_Activated(object sender, EventArgs e)
+        {
+            listViewFile.Focus();
+        }
         #endregion
 
         #region 文件列表相关
@@ -131,6 +140,7 @@ namespace RenameTool
                 listView.Items.Add(listViewItem);
             }
             listView.EndUpdate();
+            AutoResizeColumnWidth(listViewFile);
         }
 
         /// <summary>
@@ -604,5 +614,6 @@ namespace RenameTool
         }
 
         #endregion
+
     }
 }
