@@ -243,6 +243,28 @@ namespace RenameTool
         }
 
         /// <summary>
+        /// 点击列表表头事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void listViewFile_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            if (e.Column == 0)
+            {
+                return;
+            }
+            ListView listView = (ListView)sender;
+            if (listView.Columns[e.Column].Tag == null)
+            {
+                listView.Columns[e.Column].Tag = true;
+            }
+            listView.Columns[e.Column].Tag = !((bool)listView.Columns[e.Column].Tag);
+            listView.ListViewItemSorter = new ListViewSort(e.Column, listView.Columns[e.Column].Tag);
+            //指定排序器并传送列索引与升序降序关键字
+            listView.Sort();//对列表进行自定义排序
+        }
+
+        /// <summary>
         /// 将元素拖拽到列表上
         /// </summary>
         /// <param name="sender"></param>
@@ -614,6 +636,7 @@ namespace RenameTool
         }
 
         #endregion
+
 
     }
 }

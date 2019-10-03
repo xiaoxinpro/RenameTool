@@ -727,6 +727,7 @@
             this.listViewFile.Size = new System.Drawing.Size(474, 392);
             this.listViewFile.TabIndex = 0;
             this.listViewFile.UseCompatibleStateImageBehavior = false;
+            this.listViewFile.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewFile_ColumnClick);
             this.listViewFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewFile_DragDrop);
             this.listViewFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewFile_DragEnter);
             // 
