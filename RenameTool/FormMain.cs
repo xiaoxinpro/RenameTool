@@ -74,6 +74,9 @@ namespace RenameTool
 
             //自动列宽
             listView.Columns[5].Width = -2;//根据标题设置宽度
+
+            //创建表格拖动排序标识
+            listView.ListViewItemSorter = new ListViewIndexComparer();
         }
 
         /// <summary>
@@ -265,15 +268,39 @@ namespace RenameTool
         }
 
         /// <summary>
-        /// 将元素拖拽到列表上
+        /// 启动拖拽，设置拖拽的数据和效果。
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void listViewFile_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            ListView listView = (ListView)sender;
+            if (listView.SelectedItems.Count > 0)
+            {
+                Dictionary<ListViewItem, int> itemsCopy = new Dictionary<ListViewItem, int>();
+                foreach (ListViewItem item in listView.SelectedItems)
+                {
+                    itemsCopy.Add(item, item.Index);
+                }
+                listView.DoDragDrop(itemsCopy, DragDropEffects.Move);
+            }
+        }
+
+        /// <summary>
+        /// 拖拽进入ListView，判断拖拽的数据格式，并设置拖拽的效果。
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void listViewFile_DragEnter(object sender, DragEventArgs e)
         {
+            string[] sts = e.Data.GetFormats();
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                e.Effect = DragDropEffects.All;
+                e.Effect = DragDropEffects.Copy;
+            }
+            else if (sts.Length > 0 && sts[0].IndexOf("System.Windows.Forms.ListViewItem") > 0)
+            {
+                e.Effect = e.AllowedEffect;
             }
             else
             {
@@ -282,35 +309,112 @@ namespace RenameTool
         }
 
         /// <summary>
-        /// 拖拽完成时发生
+        /// 拖动经过ListView时，设置拖动的效果，显示拖放位置线
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void listViewFile_DragOver(object sender, DragEventArgs e)
+        {
+            string[] sts = e.Data.GetFormats();
+            ListView listView = (ListView)sender;
+            if (sts.Length > 0 && sts[0].IndexOf("System.Windows.Forms.ListViewItem") > 0)
+            {
+                // 获得鼠标坐标  
+                Point point = listView.PointToClient(new Point(e.X, e.Y));
+                // 返回离鼠标最近的项目的索引  
+                int index = listView.InsertionMark.NearestIndex(point);
+                // 确定光标不在拖拽项目上  
+                if (index > -1)
+                {
+                    Rectangle itemBounds = listView.GetItemRect(index);
+                    if (point.X > itemBounds.Left + (itemBounds.Width / 2))
+                    {
+                        listView.InsertionMark.AppearsAfterItem = true;
+                    }
+                    else
+                    {
+                        listView.InsertionMark.AppearsAfterItem = false;
+                    }
+                }
+                listView.InsertionMark.Index = index;
+            }
+        }
+
+        /// <summary>
+        /// 拖拽释放时发生
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void listViewFile_DragDrop(object sender, DragEventArgs e)
         {
+            string[] sts = e.Data.GetFormats();
             ListView listView = (ListView)sender;
-            string[] arrPath = (string[])e.Data.GetData(DataFormats.FileDrop, true);
-            bool isSubPath = chkSubPath.Checked;
-            bool isHidden = chkHidden.Checked;
-            Task.Run(() =>
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                List<string> listPath = new List<string>();
-                foreach (string strPath in arrPath)
+                string[] arrPath = (string[])e.Data.GetData(DataFormats.FileDrop, true);
+                bool isSubPath = chkSubPath.Checked;
+                bool isHidden = chkHidden.Checked;
+                Task.Run(() =>
                 {
-                    if (File.Exists(strPath))
+                    List<string> listPath = new List<string>();
+                    foreach (string strPath in arrPath)
                     {
-                        listPath.Add(strPath);
+                        if (File.Exists(strPath))
+                        {
+                            listPath.Add(strPath);
+                        }
+                        else if (Directory.Exists(strPath))
+                        {
+                            GetDirectoryAllFileToList(strPath, listPath, isSubPath, false, isHidden);
+                        }
                     }
-                    else if (Directory.Exists(strPath))
+                    this.Invoke(new Action(() =>
                     {
-                        GetDirectoryAllFileToList(strPath, listPath, isSubPath, false, isHidden);
-                    }
+                        AddFilePath(listPath.ToArray());
+                    }));
+                });
+            }
+            else if(sts.Length > 0 && sts[0].IndexOf("System.Windows.Forms.ListViewItem") > 0)
+            { 
+                // 返回插入标记的索引值  
+                int index = listView.InsertionMark.Index;
+                // 如果插入标记不可见，则退出.  
+                if (index == -1)
+                {
+                    return;
                 }
-                this.Invoke(new Action(() =>
+                // 如果插入标记在项目的右面，使目标索引值加一  
+                if (listView.InsertionMark.AppearsAfterItem)
                 {
-                    AddFilePath(listPath.ToArray());
-                }));
-            });
+                    index++;
+                }
+
+                // 返回拖拽项  
+                Dictionary<ListViewItem, int> items = (Dictionary<ListViewItem, int>)e.Data.GetData(typeof(Dictionary<ListViewItem, int>));
+                if (items == null)
+                {
+                    return;
+                }
+                foreach (var item in items)
+                {
+                    //在目标索引位置插入一个拖拽项目的副本   
+                    listView.Items.Insert(index, (ListViewItem)item.Key.Clone());
+                    // 移除拖拽项目的原文件  
+                    listView.Items.Remove(item.Key);
+                    if (item.Value >= index) index++;
+                }            
+            }
+        }
+
+        /// <summary>
+        /// 当鼠标离开ListView时，移除插入标记
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void listViewFile_DragLeave(object sender, EventArgs e)
+        {
+            ListView listView = (ListView)sender;
+            listView.InsertionMark.Index = -1;
         }
 
         /// <summary>
@@ -463,7 +567,7 @@ namespace RenameTool
         private void btnSiteName_Click(object sender, EventArgs e)
         {
             Dictionary<string, string> dictPath;
-            if (listViewFile.SelectedItems.Count > 0)
+            if (listViewFile.SelectedItems.Count > 1)
             {
                 dictPath = new Dictionary<string, string>();
                 for (int i = 0; i < listViewFile.SelectedItems.Count; i++)
@@ -471,13 +575,13 @@ namespace RenameTool
                     dictPath.Add(listViewFile.SelectedItems[i].SubItems[5].Text, "");
                 }
             }
-            else if (comboFileFilter.SelectedIndex == 0)
-            {
-                dictPath = new Dictionary<string, string>(objFilePathSet.GetDictPath());
-            }
             else
             {
-                dictPath = new Dictionary<string, string>(objFilePathSet.GetDictPath(comboFileFilter.SelectedItem.ToString()));
+                dictPath = new Dictionary<string, string>();
+                for (int i = 0; i < listViewFile.Items.Count; i++)
+                {
+                    dictPath.Add(listViewFile.Items[i].SubItems[5].Text, "");
+                }
             }
             FilePathRule.Clear();
             FilePathRule.Add(GetFilePathRule(groupBoxPrefix, out string strErrorPrefix));
@@ -634,6 +738,7 @@ namespace RenameTool
                 }
             }
         }
+
 
         #endregion
 

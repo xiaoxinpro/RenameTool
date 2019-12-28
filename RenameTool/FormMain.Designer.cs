@@ -729,8 +729,11 @@
             this.listViewFile.TabIndex = 0;
             this.listViewFile.UseCompatibleStateImageBehavior = false;
             this.listViewFile.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewFile_ColumnClick);
+            this.listViewFile.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.listViewFile_ItemDrag);
             this.listViewFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewFile_DragDrop);
             this.listViewFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewFile_DragEnter);
+            this.listViewFile.DragOver += new System.Windows.Forms.DragEventHandler(this.listViewFile_DragOver);
+            this.listViewFile.DragLeave += new System.EventHandler(this.listViewFile_DragLeave);
             // 
             // FormMain
             // 
