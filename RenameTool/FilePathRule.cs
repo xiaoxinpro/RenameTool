@@ -204,7 +204,7 @@ namespace RenameTool
         public override string Run(string strFileName)
         {
             RunCount++;
-            return base.Run(Regex.Match(Path.GetFileNameWithoutExtension(strFileName), Pattern).Value);
+            return base.Run(Regex.Match(strFileName, Pattern).Value);
         }
     }
 
